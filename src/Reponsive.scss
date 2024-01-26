@@ -1,0 +1,17 @@
+@import "./assets/mobileDesign.scss";
+
+@include xs{
+.calculatorMainContainer{
+.calculatorContainer{
+        width: 70%;
+    }
+}
+}
+
+@include md{
+    .calculatorMainContainer{
+        .calculatorContainer{
+            width: 30%;
+        }
+    }
+}
