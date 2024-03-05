@@ -143,7 +143,7 @@ export function Calculator() {
 				// alert((result - Math.floor(result)) != 0 )
 				if (result != Math.floor(result)) {
 					console.log("true")
-					setResult(round(result,6))
+					setResult(round(result,3))
 				}
 				else{
 					setResult(result)

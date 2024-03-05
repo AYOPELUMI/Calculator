@@ -2,8 +2,10 @@
 
 @include xs{
 .calculatorMainContainer{
+    overflow:scroll;
 .calculatorContainer{
         width: 70%;
+        min-width:320px;
     }
 }
 }

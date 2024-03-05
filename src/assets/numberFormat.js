@@ -8,7 +8,7 @@ export const toOptionalFixed = (num) =>{
     num = removeComma(num)
      num = Number(num)
 
-    return numberFormat(`${Number.parseFloat(num.toFixed(6))}`)
+    return numberFormat(`${Number.parseFloat(num.toFixed(4))}`)
 }
 
 export function numberFormat(number){
