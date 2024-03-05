@@ -72,6 +72,12 @@
 				border-radius: 8px;
 				font-weight: 900;
 				background: #2a327147;
+
+				&:active {
+					background:#6cacc5;
+					color:#2a327147;
+					font-weight: 900;
+				}
 			}
 		}
 	}

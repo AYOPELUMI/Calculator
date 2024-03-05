@@ -1,12 +1,12 @@
 import {useState,useEffect, useRef} from "react"
 import {removeComma} from "./assets/removeComma"
-import {numberFormat} from "./assets/numberFormat"
+import {toOptionalFixed, round , numberFormat }from "./assets/numberFormat"
 import"./Calculator.scss"
 import "./Reponsive.scss"
 export function Calculator() {
    
-	const [calcVariable1, setCalcVaraible1] = useState("")
-	const [calcVariable2, setCalcVaraible2] = useState("")
+	const [calcVariable1, setCalcVariable1] = useState("")
+	const [calcVariable2, setCalcVariable2] = useState("")
 	const [isOperandActive, setIsOperandActive] = useState(false)
 	const [keyOperand, setKeyOperand] = useState("")
 	const[resultOperand, setResultOperand] = useState(false)
@@ -30,8 +30,18 @@ export function Calculator() {
 		console.log("e.key is "+e.key)
 		console.log("e.target.value is "+e.target.value)
 		console.log({keyValue})
+		console.log({isOperandActive})
+		console.log({calcVariable1})
+		console.log({calcVariable2})
+		console.log({keyOperand})
 		// console.log("calcVariable2,length is "+calcVariable2.length)
 		// console.log("calcVariable1.length is "+calcVariable1.length)
+		if(result !=null && result !=""){
+			setKeyOperand("")
+			setCalcVariable2("")
+			setResult("")
+			console.log({result})
+		}
 		if (calcVariable1.length <"9" || calcVariable2.length < "9") {
 
 			if (keyValue == "+" || keyValue=="-" || keyValue == "/" || keyValue=="x" || keyValue == "*") {
@@ -42,26 +52,26 @@ export function Calculator() {
 					if (keyOperand == "/") {
 						let divided = Number(calcVariable1)/Number(calcVariable2)
 						console.log({divided})
-						setCalcVaraible1(divided)
-						setCalcVaraible2(0)
+						setCalcVariable1(divided)
+						setCalcVariable2("")
 					}
 					if (keyOperand == "x" || keyOperand =="*") {
 						let multiplied = Number(calcVariable1) * Number(calcVariable2)
 						console.log({multiplied})
-						setCalcVaraible1(multiplied)
-						setCalcVaraible2(0)
+						setCalcVariable1(multiplied)
+						setCalcVariable2("")
 					}
 					if (keyOperand == "+") {
 						let sum = Number(calcVariable1) + Number(calcVariable2)
 						console.log({sum})
-						setCalcVaraible1(sum)
-						setCalcVaraible2(0)
+						setCalcVariable1(sum)
+						setCalcVariable2("")
 					}
 					if (keyOperand == "-") {
 						let subtraction = Number(calcVariable1) - Number(calcVariable2)
 						console.log({subtraction})
-						setCalcVaraible1(subtraction)
-						setCalcVaraible2(0)
+						setCalcVariable1(subtraction)
+						setCalcVariable2("")
 					}
 				}   
 				if (keyValue == "*") {
@@ -76,20 +86,20 @@ export function Calculator() {
 				console.log({keyValue})
 				if (isOperandActive) {
 					if (calcVariable2 == 0 && decimalPoint== false) {
-						setCalcVaraible2(keyValue)
+						setCalcVariable2(keyValue)
 					}
 					else{
-					setCalcVaraible2(calcVariable2+keyValue)
+					setCalcVariable2(calcVariable2+keyValue)
 					setResultOperand(false)
 					}
 				}
 				else{
 					if ((calcVariable1==0 || resultOperand == true) && decimalPoint == false) {
-						setCalcVaraible1(keyValue)
+						setCalcVariable1(keyValue)
 						setResultOperand(false)
 					}
 					else{
-					setCalcVaraible1(calcVariable1+keyValue)
+					setCalcVariable1(calcVariable1+keyValue)
 					}
 				}
 			}
@@ -97,12 +107,12 @@ export function Calculator() {
 				if (decimalPoint == false) {
 
 					if (isOperandActive) {
-						setCalcVaraible2((nuberFormatcalcVariable2+keyValue))
+						setCalcVariable2(calcVariable2+keyValue)
 						setDecimalPoint(true)
 
 					}
 					else{
-						setCalcVaraible1(numberFormat(calcVariable1+keyValue))
+						setCalcVariable1(calcVariable1+keyValue)
 						setDecimalPoint(true)
 					}
 				}
@@ -127,35 +137,36 @@ export function Calculator() {
 				}
 				console.log({result})
 				if ((keyOperand == "" || keyOperand == undefined) && calcVariable1 != null){
-					result = numberFormat(calcVariable1);
+					result = calcVariable1;
 				}
 				console.log({result})
 				// alert((result - Math.floor(result)) != 0 )
 				if (result != Math.floor(result)) {
 					console.log("true")
-					setResult(result.toFixed(4))
-					setCalcVaraible1(result.toFixed(4))
+					setResult(round(result,6))
 				}
 				else{
 					setResult(result)
-					setCalcVaraible1(result)
+					// setCalcVariable1(result)
 				}
 			}
-			setKeyOperand(null)
-				setCalcVaraible2("")
+			// setKeyOperand(null)
+			// 	setCalcVariable2("")
 		}
 		if (keyValue=="RESET"||keyValue == "Delete") {
 			setResult("")
 			setIsOperandActive(false)
 			setKeyOperand("")
-			setCalcVaraible2("")
-			setCalcVaraible1("")
+			setCalcVariable2("")
+			setCalcVariable1("")
 			setResultOperand(false)
 			setDecimalPoint(false)
 		}
 		if (keyValue=="DEL" || keyValue == "Backspace") {
+			setResultOperand(false)
 			if (isOperandActive && calcVariable2 != "") {
 				let calcVariable2Clone = String(calcVariable2)
+				console.log({calcVariable2Clone})
 				calcVariable2Clone =Array.from( calcVariable2Clone)
 				if (calcVariable2Clone.length >=1) {
 					calcVariable2Clone.pop()
@@ -163,7 +174,7 @@ export function Calculator() {
 						setDecimalPoint(false)
 					}
 					calcVariable2Clone = Number(calcVariable2Clone.join(""))
-					setCalcVaraible2(calcVariable2Clone)
+					setCalcVariable2(calcVariable2Clone)
 				}
 			}
 			if (isOperandActive && calcVariable2=="") {
@@ -181,14 +192,15 @@ export function Calculator() {
 						setDecimalPoint(false)
 					}
 					calcVariable1Clone = Number(calcVariable1Clone.join(""))
-					setCalcVaraible1(numberFormat(calcVariable1Clone))
+					setCalcVariable1(calcVariable1Clone)
 				}
 			}
 		}
-		keyValue = undefined
+		// keyValue = undefined
 	}
 	console.log({isOperandActive})
 	console.log({calcVariable1})
+	console.log(numberFormat(calcVariable1))
 	console.log({calcVariable2})
 	console.log({keyOperand})
 	console.log({resultOperand})
@@ -247,10 +259,7 @@ export function Calculator() {
 				</div>
 				<div className="displayContainer">
 					<p>
-						{isOperandActive ? (
-								numberFormat(calcVariable1)+ " "+(keyOperand ? keyOperand : " ") +" " +(calcVariable2 ? numberFormat(calcVariable2) : "")
-							) : numberFormat(calcVariable1)
-						}
+						{toOptionalFixed(numberFormat(calcVariable1))+ " "+(keyOperand ? keyOperand : " ") +" " +(calcVariable2 ? numberFormat(calcVariable2) : "")}
 					</p>
 					<h3>
 						{
