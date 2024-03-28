@@ -1,6 +1,6 @@
 import {useState,useEffect, useRef} from "react"
 import {removeComma} from "./assets/removeComma"
-import {toOptionalFixed, round , numberFormat }from "./assets/numberFormat"
+import {toOptionalFixed, round , numberFormat, displayDecimalPoint }from "./assets/numberFormat"
 import"./Calculator.scss"
 import "./Reponsive.scss"
 export function Calculator() {
@@ -105,7 +105,8 @@ export function Calculator() {
 			}
 			if (keyValue== ".") {
 				if (decimalPoint == false) {
-
+					console.log({decimalPoint})
+					console.log({isOperandActive})
 					if (isOperandActive) {
 						setCalcVariable2(calcVariable2+keyValue)
 						setDecimalPoint(true)
@@ -113,6 +114,13 @@ export function Calculator() {
 					}
 					else{
 						setCalcVariable1(calcVariable1+keyValue)
+						setDecimalPoint(true)
+					}
+				}
+				else{
+					console.log("in the decimal else statement")
+					if(isOperandActive){
+						setCalcVariable2(calcVariable2+keyValue)
 						setDecimalPoint(true)
 					}
 				}
@@ -205,13 +213,7 @@ export function Calculator() {
 	console.log({keyOperand})
 	console.log({resultOperand})
   
-	const handleKeyPress = (e) =>{
-		e.persist();
-		console.log(e.key)
-		console.log(e.charCode)
-		// console.log(e.which)
-	}
-
+console.log(displayDecimalPoint(calcVariable2))
 	let displayKeyArray =[]
 
 	useEffect(() => {
@@ -259,7 +261,7 @@ export function Calculator() {
 				</div>
 				<div className="displayContainer">
 					<p>
-						{toOptionalFixed(numberFormat(calcVariable1))+ " "+(keyOperand ? keyOperand : " ") +" " +(calcVariable2 ? numberFormat(calcVariable2) : "")}
+						{(decimalPoint ? displayDecimalPoint(calcVariable1) : toOptionalFixed(numberFormat(calcVariable1)))+ " "+(keyOperand ? keyOperand : " ") +" " +(calcVariable2 ?   displayDecimalPoint(calcVariable2) : "")}
 					</p>
 					<h3>
 						{
