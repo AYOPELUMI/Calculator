@@ -14,12 +14,12 @@ export function Calculator() {
 	const[result, setResult] = useState("")
 	const calcKeysArray = [7,8,9,"DEL",4,5,6,"+",1,2,3,"-",".",0,"/","x","RESET","="]
 
-	let keyValue
 	let divRef = useRef(null)
 
 	const handleKeyPressed = (e) => {
+		let keyValue
 		console.log({keyValue})
-		if (e.key) {
+		if (e.key != undefined ) {
 			keyValue = e.key
 			e.target.value = undefined
 		}
@@ -34,8 +34,8 @@ export function Calculator() {
 		console.log({calcVariable1})
 		console.log({calcVariable2})
 		console.log({keyOperand})
-		// console.log("calcVariable2,length is "+calcVariable2.length)
-		// console.log("calcVariable1.length is "+calcVariable1.length)
+		console.log("calcVariable2,length is "+calcVariable2.length)
+		console.log("calcVariable1.length is "+calcVariable1.length)
 		if(result !=null && result !=""){
 			setKeyOperand("")
 			setCalcVariable2("")
@@ -82,6 +82,7 @@ export function Calculator() {
 				}
 			}
 			let numberKeyValue= isNaN(keyValue)
+			console.log(numberKeyValue)
 			if (!numberKeyValue) {
 				console.log({keyValue})
 				if (isOperandActive) {
@@ -190,10 +191,12 @@ export function Calculator() {
 				setIsOperandActive(false)
 			}
 			if (isOperandActive == false) {
+				
 				let calcVariable1Clone = String(calcVariable1)
 				calcVariable1Clone =Array.from( calcVariable1Clone)
 				console.log({calcVariable1Clone})
-				if (calcVariable1Clone.length >=1) {
+				if (calcVariable1Clone.length >1) {
+					console.log(" i am in the delete if statment")
 					calcVariable1Clone.pop()
 					console.log({calcVariable1Clone})
 					if (calcVariable1Clone[calcVariable1Clone.length-1] ==".") {
@@ -201,6 +204,17 @@ export function Calculator() {
 					}
 					calcVariable1Clone = Number(calcVariable1Clone.join(""))
 					setCalcVariable1(calcVariable1Clone)
+				}
+				else{
+					console.log(" i am in the delete else statment")
+
+					setResult("")
+					setIsOperandActive(false)
+					setKeyOperand("")
+					setCalcVariable2("")
+					setCalcVariable1("")
+					setResultOperand(false)
+					setDecimalPoint(false)
 				}
 			}
 		}
@@ -229,7 +243,7 @@ console.log(displayDecimalPoint(calcVariable2))
 		})
 
 	},[])
-
+console.log(displayDecimalPoint(calcVariable2))
 	for (var i = 0; i < calcKeysArray.length; i++) {
 		let style=[]
 		if (calcKeysArray[i] == "DEL" || calcKeysArray[i]=="RESET") {
@@ -261,7 +275,7 @@ console.log(displayDecimalPoint(calcVariable2))
 				</div>
 				<div className="displayContainer">
 					<p>
-						{(decimalPoint ? displayDecimalPoint(calcVariable1) : toOptionalFixed(numberFormat(calcVariable1)))+ " "+(keyOperand ? keyOperand : " ") +" " +(calcVariable2 ?   displayDecimalPoint(calcVariable2) : "")}
+						{(decimalPoint ? displayDecimalPoint(calcVariable1) : toOptionalFixed(numberFormat(calcVariable1)))+ " "+(keyOperand ? keyOperand : " ") +" " +(calcVariable2 ? decimalPoint ?  displayDecimalPoint(calcVariable2) :numberFormat(calcVariable2): "")}
 					</p>
 					<h3>
 						{
